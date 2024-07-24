@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, { useState } from "react";
 import {
   Pressable,
   SafeAreaView,
@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function DonorDetails({navigation}) {
+export default function DonorDetails({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [userdata, setuserdata] = useState({
     bname: "",
@@ -22,28 +22,28 @@ export default function DonorDetails({navigation}) {
     mno: "",
     email: "",
     address: "",
-    pincode: null,
+    pincode: "",
     city: "",
     state: "",
   });
 
   const handleChange = (name, value) => {
-    setuserdata((prevData) => ({...prevData, [name]: value}));
+    setuserdata((prevData) => ({ ...prevData, [name]: value }));
   };
 
   async function submit() {
     if (
-      !(
-        userdata.address ||
-        userdata.bname ||
-        userdata.city ||
-        userdata.email ||
-        userdata.mno ||
-        userdata.pincode ||
-        userdata.state
-      )
-    )
-      return Alert.alert("please give all info");
+      !userdata.address ||
+      !userdata.bname ||
+      !userdata.city ||
+      !userdata.email ||
+      !userdata.mno ||
+      !userdata.pincode ||
+      !userdata.state
+    ) {
+      return Alert.alert("Please give all info");
+    }
+
     const cleanedPhoneNumber = String(userdata.mno).trim();
     const cleanedPincode = String(userdata.pincode).trim();
 
@@ -54,8 +54,10 @@ export default function DonorDetails({navigation}) {
 
     if (cleanedPincode.length !== 6 || isNaN(cleanedPincode)) {
       return Alert.alert("Please give correct pincode");
-    } else if (userdata.email.indexOf("@") < 0)
-      return Alert.alert("please give correct emai");
+    } else if (userdata.email.indexOf("@") < 0) {
+      return Alert.alert("Please give correct email");
+    }
+
     try {
       await AsyncStorage.setItem("usercreds", JSON.stringify(userdata));
       setModalVisible(true);
@@ -67,16 +69,22 @@ export default function DonorDetails({navigation}) {
 
   return (
     <SafeAreaView>
-      <ScrollView style={{backgroundColor:"#00123d"}}>
-        <Text style={{fontSize: 30, marginBottom: 15, marginLeft: 25,color:"white"}}>
+      <ScrollView style={{ backgroundColor: "#00123d" }}>
+        <Text
+          style={{
+            fontSize: 30,
+            marginBottom: 15,
+            marginLeft: 25,
+            color: "white",
+          }}
+        >
           Donor Details
         </Text>
         <View
           style={{
             display: "flex",
             flexDirection: "row",
-            gap: "120",
-            justifyContent: "space-even",
+            justifyContent: "space-evenly",
           }}
         >
           <Pressable style={style1.divs}>
@@ -84,17 +92,17 @@ export default function DonorDetails({navigation}) {
               source={require("../assets/backeryrm.png")}
               style={style1.logos}
             />
-            <Text style={[style1.text,{color:"black"}]}>Restaurent</Text>
+            <Text style={[style1.text, { color: "black" }]}>Restaurant</Text>
           </Pressable>
           <Pressable style={style1.divs}>
             <ImageBackground
               source={require("../assets/res.png")}
               style={style1.logos}
             />
-            <Text style={[style1.text,{color:"black"}]}>Individual</Text>
+            <Text style={[style1.text, { color: "black" }]}>Individual</Text>
           </Pressable>
         </View>
-        <View style={{width:"100%"}}>
+        <View style={{ width: "100%" }}>
           <TextInput
             keyboardType="default"
             placeholder="Business Name"
@@ -109,7 +117,7 @@ export default function DonorDetails({navigation}) {
             value={userdata.cname}
             onChangeText={(value) => handleChange("cname", value)}
           />
-          <View style={{display: "flex", flexDirection: "row"}}>
+          <View style={{ display: "flex", flexDirection: "row" }}>
             <TextInput
               placeholder="Mobile Number"
               keyboardType="numeric"
@@ -127,41 +135,47 @@ export default function DonorDetails({navigation}) {
           />
           <TextInput
             placeholder="Address"
-            keyboardType="text"
+            keyboardType="default"
             style={[style1.textbox]}
             value={userdata.address}
             onChangeText={(value) => handleChange("address", value)}
           />
           <TextInput
             placeholder="Pin Code"
-            keyboardType="Numberic"
+            keyboardType="numeric"
             style={[style1.textbox]}
             value={userdata.pincode}
             onChangeText={(value) => handleChange("pincode", value)}
           />
           <TextInput
             placeholder="City"
-            keyboardType="text"
+            keyboardType="default"
             style={[style1.textbox]}
             value={userdata.city}
             onChangeText={(value) => handleChange("city", value)}
           />
           <TextInput
             placeholder="State"
-            keyboardType="text"
+            keyboardType="default"
             style={[style1.textbox]}
             value={userdata.state}
             onChangeText={(value) => handleChange("state", value)}
           />
-          <Text style={{textAlign: "center",color:"#fff"}}>or</Text>
+          <Text style={{ textAlign: "center", color: "#fff" }}>or</Text>
           <Pressable>
-            <Text style={{textAlign: "center",color:"#fff"}}>Pin location By map</Text>
+            <Text style={{ textAlign: "center", color: "#fff" }}>
+              Pin location By map
+            </Text>
           </Pressable>
           <Pressable onPress={submit}>
             <Text
               style={[
                 style1.textbox,
-                {marginBottom: 30, backgroundColor: "#34e89e",textAlign:"center"},
+                {
+                  marginBottom: 30,
+                  backgroundColor: "#34e89e",
+                  textAlign: "center",
+                },
               ]}
             >
               Submit
@@ -173,7 +187,6 @@ export default function DonorDetails({navigation}) {
         animationType="fade"
         transparent={true}
         visible={modalVisible}
-        focusable={modalVisible}
       >
         <View
           style={{
@@ -189,14 +202,14 @@ export default function DonorDetails({navigation}) {
             width: 300,
           }}
         >
-          <Text style={{textAlign: "center", fontWeight: 10, fontSize: 30}}>
+          <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 30 }}>
             Congrats Donor!
           </Text>
-          <Text style={{textAlign: "center", fontSize: 20}}>
+          <Text style={{ textAlign: "center", fontSize: 20 }}>
             You Are All Set To Go
           </Text>
           <Pressable
-            style={{height: "50", width: "80%", marginVertical: "5%"}}
+            style={{ height: 50, width: "80%", marginVertical: "5%" }}
             onPress={() => navigation.navigate("DonorPage")}
           >
             <Text
@@ -206,6 +219,7 @@ export default function DonorDetails({navigation}) {
                 marginLeft: "20%",
                 height: 50,
                 width: 200,
+                lineHeight: 50,
               }}
             >
               Continue
@@ -222,30 +236,30 @@ const style1 = StyleSheet.create({
     height: "100%",
     width: "100%",
     position: "absolute",
-    backgroundColor:"white"
+    backgroundColor: "white",
   },
   divs: {
-    color:"#fff",
+    color: "#fff",
     height: 100,
     width: 100,
     borderWidth: 1,
     borderRadius: 10,
     marginLeft: 30,
   },
-  text: {top: "80%", left: "22%",color:"#fff"},
+  text: { top: "80%", left: "22%", color: "#fff" },
   textbox: {
-    fontSize:20,
+    fontSize: 20,
     height: 60,
     width: "80%",
     borderWidth: 1,
     borderRadius: 10,
     marginLeft: 40,
     marginTop: 20,
-    backgroundColor:"#fff"
+    backgroundColor: "#fff",
   },
   pad: {
-    backgroundColor:"#fff",
-    color:"#fff",
+    backgroundColor: "#fff",
+    color: "#fff",
     height: 60,
     width: 40,
     marginLeft: 27,

@@ -1,4 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
+
 import { StyleSheet, Text, View } from 'react-native';
 import Role from './Components/Role';
 import DonorDetails from './Components/DonorDetails';
