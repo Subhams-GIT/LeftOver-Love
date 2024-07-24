@@ -19,17 +19,16 @@ export default function Role({ navigation }) {
 		}
 		else if(isDonorChecked) 
 		navigation.navigate("DonorDetails");
-	else 
-	console.log("no");
-	console.log(isDonorChecked);
-	console.log(isReceiverChecked);
+		else if(isReceiverChecked) navigation.navigate("receiverdet")
+		else 
+		console.log("no");
 	},[isDonorChecked,isReceiverChecked]);
 
 	return (
 		<SafeAreaView style={{ height: "100%" }}>
 			<View style={{ marginLeft: "10%", marginTop: "50%", display: "flex" }}>
-				<Text style={{ fontSize: 30 }}>Want To Share Your Food?</Text>
-				<Text>-----------------------------</Text>
+				<Text style={{ fontSize: 30,borderBottomWidth:1 }}>Want To Share Your Food?</Text>
+				
 				<Text style={{ fontSize: 30 }}>Choose Your Role</Text>
 			</View>
 			<View
@@ -107,10 +106,7 @@ export default function Role({ navigation }) {
 				}}
 				onPress={navigatorFunc}
 			>
-				<Text
-					style={{ paddingHorizontal: "40%", paddingTop: "10%" }}
-					
-				>
+				<Text style={{ paddingHorizontal: "40%", paddingTop: "10%" }}	>
 					Continue
 				</Text>
 			</TouchableOpacity>
