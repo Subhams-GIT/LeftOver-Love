@@ -5,7 +5,6 @@ import {
   Text,
   TextInput,
   View,
-  Image,
   ImageBackground,
   StyleSheet,
   ScrollView,
@@ -26,36 +25,40 @@ export default function DonorDetails({ navigation }) {
     city: "",
     state: "",
   });
+  const [selectedRole, setSelectedRole] = useState(""); // State for managing selected role
 
   const handleChange = (name, value) => {
     setuserdata((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+  };
+
   async function submit() {
-    if (
-      !userdata.address ||
-      !userdata.bname ||
-      !userdata.city ||
-      !userdata.email ||
-      !userdata.mno ||
-      !userdata.pincode ||
-      !userdata.state
-    ) {
-      return Alert.alert("Please give all info");
+    const {bname,
+      cname,
+      mno,
+      email,
+      address,
+      pincode,
+      city,
+      state,}=userdata;
+    if (!(bname && mno && email&&address&& pincode&&city&&state )) {
+      return Alert.alert("Please provide all information");
     }
 
     const cleanedPhoneNumber = String(userdata.mno).trim();
     const cleanedPincode = String(userdata.pincode).trim();
 
     if (cleanedPhoneNumber.length !== 10 || isNaN(cleanedPhoneNumber)) {
-      console.log(userdata.mno);
-      return Alert.alert("Please give correct phone number");
+      return Alert.alert("Please provide a correct phone number");
     }
 
     if (cleanedPincode.length !== 6 || isNaN(cleanedPincode)) {
-      return Alert.alert("Please give correct pincode");
+      return Alert.alert("Please provide a correct pincode");
     } else if (userdata.email.indexOf("@") < 0) {
-      return Alert.alert("Please give correct email");
+      return Alert.alert("Please provide a correct email");
     }
 
     try {
@@ -68,203 +71,220 @@ export default function DonorDetails({ navigation }) {
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView style={{ backgroundColor: "#00123d" }}>
-        <Text
-          style={{
-            fontSize: 30,
-            marginBottom: 15,
-            marginLeft: 25,
-            color: "white",
-          }}
-        >
-          Donor Details
-        </Text>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-          }}
-        >
-          <Pressable style={style1.divs}>
-            <ImageBackground
-              source={require("../assets/backeryrm.png")}
-              style={style1.logos}
-            />
-            <Text style={[style1.text, { color: "black" }]}>Restaurant</Text>
-          </Pressable>
-          <Pressable style={style1.divs}>
-            <ImageBackground
-              source={require("../assets/res.png")}
-              style={style1.logos}
-            />
-            <Text style={[style1.text, { color: "black" }]}>Individual</Text>
-          </Pressable>
-        </View>
-        <View style={{ width: "100%" }}>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.title}>Please Fill The Form!</Text>
+        <View style={styles.formContainer}>
           <TextInput
             keyboardType="default"
-            placeholder="Business Name"
-            style={style1.textbox}
+            placeholder="Business Name (Optional)"
+            style={styles.textbox}
             value={userdata.bname}
             onChangeText={(value) => handleChange("bname", value)}
           />
           <TextInput
             keyboardType="default"
-            placeholder="Contact Name (Optional)"
-            style={style1.textbox}
+            placeholder="Contact Name "
+            style={styles.textbox}
             value={userdata.cname}
             onChangeText={(value) => handleChange("cname", value)}
           />
-          <View style={{ display: "flex", flexDirection: "row" }}>
-            <TextInput
-              placeholder="Mobile Number"
-              keyboardType="numeric"
-              style={[style1.textbox]}
-              value={userdata.mno}
-              onChangeText={(value) => handleChange("mno", String(value))}
-            />
-          </View>
+          <TextInput
+            placeholder="Mobile Number"
+            keyboardType="numeric"
+            style={styles.textbox}
+            value={userdata.mno}
+            onChangeText={(value) => handleChange("mno", String(value))}
+          />
           <TextInput
             placeholder="Email Id"
             keyboardType="email-address"
-            style={[style1.textbox]}
+            style={styles.textbox}
             value={userdata.email}
             onChangeText={(value) => handleChange("email", value)}
           />
           <TextInput
             placeholder="Address"
             keyboardType="default"
-            style={[style1.textbox]}
+            style={styles.textbox}
             value={userdata.address}
             onChangeText={(value) => handleChange("address", value)}
           />
           <TextInput
             placeholder="Pin Code"
             keyboardType="numeric"
-            style={[style1.textbox]}
+            style={styles.textbox}
             value={userdata.pincode}
             onChangeText={(value) => handleChange("pincode", value)}
           />
           <TextInput
             placeholder="City"
             keyboardType="default"
-            style={[style1.textbox]}
+            style={styles.textbox}
             value={userdata.city}
             onChangeText={(value) => handleChange("city", value)}
           />
           <TextInput
             placeholder="State"
             keyboardType="default"
-            style={[style1.textbox]}
+            style={styles.textbox}
             value={userdata.state}
             onChangeText={(value) => handleChange("state", value)}
           />
-          <Text style={{ textAlign: "center", color: "#fff" }}>or</Text>
+          <Text style={styles.orText}>or</Text>
           <Pressable>
-            <Text style={{ textAlign: "center", color: "#fff" }}>
-              Pin location By map
-            </Text>
+            <Text style={styles.mapText}>Pin location By map</Text>
           </Pressable>
-          <Pressable onPress={submit}>
-            <Text
-              style={[
-                style1.textbox,
-                {
-                  marginBottom: 30,
-                  backgroundColor: "#34e89e",
-                  textAlign: "center",
-                },
-              ]}
-            >
-              Submit
-            </Text>
+          <Pressable style={styles.submitButton} onPress={submit}>
+            <Text style={styles.submitButtonText}>Submit</Text>
           </Pressable>
         </View>
       </ScrollView>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-      >
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginTop: "80%",
-            marginLeft: "15%",
-            borderRadius: 20,
-            paddingVertical: "20%",
-            borderWidth: 2,
-            backgroundColor: "white",
-            minHeight: 300,
-            width: 300,
-          }}
-        >
-          <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 30 }}>
-            Congrats Donor!
-          </Text>
-          <Text style={{ textAlign: "center", fontSize: 20 }}>
-            You Are All Set To Go
-          </Text>
-          <Pressable
-            style={{ height: 50, width: "80%", marginVertical: "5%" }}
-            onPress={() => navigation.navigate("DonorPage")}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                backgroundColor: "#34e89e",
-                marginLeft: "20%",
-                height: 50,
-                width: 200,
-                lineHeight: 50,
+      <Modal animationType="fade" transparent={true} visible={modalVisible}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Congrats Donor!</Text>
+            <Text style={styles.modalText}>You Are All Set To Go</Text>
+            <Pressable
+              style={styles.modalButton}
+              onPress={() => {
+                setModalVisible(false);
+                navigation.navigate("DonorPage");
               }}
             >
-              Continue
-            </Text>
-          </Pressable>
+              <Text style={styles.modalButtonText}>Continue</Text>
+            </Pressable>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>
   );
 }
 
-const style1 = StyleSheet.create({
-  logos: {
-    height: "100%",
-    width: "100%",
-    position: "absolute",
-    backgroundColor: "white",
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1e2a38',
   },
-  divs: {
-    color: "#fff",
+  scrollContainer: {
+    flexGrow: 1,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 30,
+    marginBottom: 15,
+    color: "white",
+  },
+  roleContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  roleButton: {
     height: 100,
     width: 100,
     borderWidth: 1,
     borderRadius: 10,
-    marginLeft: 30,
+    marginHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  text: { top: "80%", left: "22%", color: "#fff" },
+  imageBackground: {
+    height: "100%",
+    width: "100%",
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageBackgroundImage: {
+    borderRadius: 10,
+  },
+  roleText: {
+    color: "#000",
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    position: 'absolute',
+    bottom: 10,
+  },
+  formContainer: {
+    width: "100%",
+    paddingBottom: 20,
+    alignItems: 'center',
+  },
   textbox: {
     fontSize: 20,
     height: 60,
     width: "80%",
     borderWidth: 1,
     borderRadius: 10,
-    marginLeft: 40,
     marginTop: 20,
     backgroundColor: "#fff",
+    paddingHorizontal: 10,
   },
-  pad: {
-    backgroundColor: "#fff",
+  orText: {
+    textAlign: "center",
     color: "#fff",
-    height: 60,
-    width: 40,
-    marginLeft: 27,
-    marginTop: 20,
-    marginHorizontal: 5,
-    borderWidth: 1,
+    marginVertical: 10,
+  },
+  mapText: {
+    textAlign: "center",
+    color: "#fff",
+    marginVertical: 10,
+  },
+  submitButton: {
+    marginBottom: 30,
+    backgroundColor: "#34e89e",
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
+  },
+  submitButtonText: {
+    fontSize: 20,
+    color: "white",
+    textAlign: "center",
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingHorizontal: 20,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 30,
+    color: '#000',
+  },
+  modalText: {
+    textAlign: "center",
+    fontSize: 20,
+    color: '#000',
+  },
+  modalButton: {
+    backgroundColor: "#34e89e",
+    borderRadius: 10,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginVertical: 20,
+  },
+  modalButtonText: {
+    fontSize: 20,
+    color: "white",
+    textAlign: "center",
   },
 });

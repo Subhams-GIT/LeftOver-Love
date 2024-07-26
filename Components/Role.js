@@ -25,14 +25,15 @@ export default function Role({ navigation }) {
 	}, [isDonorChecked, isReceiverChecked, navigation]);
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
-			<View style={{ marginLeft: "10%", marginTop: "50%" }}>
-				<Text style={{ fontSize: 30, borderBottomWidth: 1 }}>Want To Share Your Food?</Text>
-				<Text style={{ fontSize: 30, marginTop: 20 }}>Choose Your Role</Text>
+		<SafeAreaView style={{ flex: 1 ,backgroundColor:"#1e2a38"}}>
+			<View style={{ marginLeft: "10%", marginTop: "50%",borderColor:"white" }}>
+				<Text style={{ fontSize: 30, borderBottomWidth: 1 ,color:"white",borderColor:"white",}}>Want To Share Your Food?</Text>
+				<Text style={{ fontSize: 30, marginTop: 20,color:"white" }}>Choose Your Role</Text>
 			</View>
 			<View
 				style={{
 					borderWidth: 1,
+					borderColor:"white",
 					borderRadius: 10,
 					marginVertical: 20,
 					paddingBottom: 30,
@@ -48,15 +49,16 @@ export default function Role({ navigation }) {
 						innerIconStyle={{ borderWidth: 2 }}
 						onPress={(checked) => setDonorChecked(checked)}
 					/>
-					<Text style={{ fontSize: 30, marginLeft: 10 }}>Donor</Text>
+					<Text style={{ fontSize: 30, marginLeft: 10,color:"white" }}>Donor</Text>
 				</View>
-				<Text style={{ marginLeft: "10%", fontSize: 20 }}>
+				<Text style={{ marginLeft: "10%", fontSize: 20 ,color:"white"}}>
 					Donate Some Food To The Needful
 				</Text>
 			</View>
 			<View
 				style={{
 					borderWidth: 1,
+					borderColor:"white",
 					borderRadius: 10,
 					marginVertical: 20,
 					paddingBottom: 30,
@@ -72,15 +74,16 @@ export default function Role({ navigation }) {
 						innerIconStyle={{ borderWidth: 2 }}
 						onPress={(checked) => setReceiverChecked(checked)}
 					/>
-					<Text style={{ fontSize: 30, marginLeft: 10 }}>Receiver</Text>
+					<Text style={{ fontSize: 30, marginLeft: 10,color:"white" }}>Receiver</Text>
 				</View>
-				<Text style={{ marginLeft: "10%", fontSize: 20 }}>
+				<Text style={{ marginLeft: "10%", fontSize: 20,color:"white" }}>
 					Pick Up and Deliver Food To The Needful
 				</Text>
 			</View>
 			<TouchableOpacity
 				style={{
 					borderWidth: 1,
+					
 					borderRadius: 10,
 					marginVertical: 20,
 					padding: 20,

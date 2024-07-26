@@ -9,7 +9,10 @@ import GettingStarted from './Components/gettingStarted';
 import SignUp from './Components/Signup';
 import LoginScreen from './Components/Signin';
 import ReceiverDetails from './Components/ReceiverDetails';
+import DonorList from './Components/Donorlist';
+import ReceiverPage from './Components/ReceiverPage';
 const Stack=createNativeStackNavigator();
+
 export default function App() {
   return (
    <NavigationContainer >
@@ -21,6 +24,8 @@ export default function App() {
       <Stack.Screen name="DonorDetails" component={DonorDetails} />
       <Stack.Screen name='DonorPage' component={DonorPage} options={{headerShown:false}}/>
       <Stack.Screen name="receiverdet" component={ReceiverDetails}/>
+      <Stack.Screen name="donorlist" component={DonorList}/>
+      <Stack.Screen name="receiver" component={ReceiverPage}/>
     </Stack.Navigator>
    </NavigationContainer>
   );

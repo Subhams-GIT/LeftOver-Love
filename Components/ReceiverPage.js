@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 
-export default function DonorPage({ navigation }) {
+export default function ReceiverPage({ navigation }) {
   const [donor, setDonor] = useState({});
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function DonorPage({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.greeting}>Hi {donor.cname}</Text>
-        <Text style={styles.title}>You Are A Donor</Text>
+        <Text style={styles.title}>You Are A Receiver</Text>
       </View>
       <View style={styles.statsContainer}>
         {["No of Donations", "FeedBack", "Points Earned"].map((text, index) => (
@@ -63,18 +63,18 @@ export default function DonorPage({ navigation }) {
           <Text style={styles.myPostText}>My Post</Text>
         </Pressable>
         <View style={styles.createPostContainer}>
-          <Text style={styles.createPostText}>Do you have some food to Donate?</Text>
+          <Text style={styles.createPostText}>Do you require Food?</Text>
           <Pressable
             style={styles.createPostButton}
             onPress={() => navigation.navigate("donorlist")}
           >
-            <Text style={styles.createPostButtonText}>Create Donation Post</Text>
+            <Text style={styles.createPostButtonText}>Create Post for Food</Text>
           </Pressable>
         </View>
       </View>
       <View style={styles.donationHistoryContainer}>
         <View style={styles.donationHistoryHeader}>
-          <Text style={styles.donationHistoryTitle}>Donation History</Text>
+          <Text style={styles.donationHistoryTitle}>Your History</Text>
           <Pressable>
             <Text style={styles.viewAllText}>View All</Text>
           </Pressable>
@@ -88,20 +88,6 @@ export default function DonorPage({ navigation }) {
             <Text>Status</Text>
           </View>
         </View>
-      </View>
-      <View style={styles.ngoContainer}>
-        <View style={styles.ngoHeader}>
-          <Text style={styles.ngoTitle}>NGOS NEAR YOU</Text>
-          <Pressable>
-            <Text style={styles.viewAllText}>View All</Text>
-          </Pressable>
-        </View>
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          numColumns={2}
-          keyExtractor={(item) => item.id.toString()}
-        />
       </View>
     </SafeAreaView>
   );
