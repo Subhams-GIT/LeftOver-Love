@@ -11,11 +11,15 @@ import LoginScreen from './Components/Signin';
 import ReceiverDetails from './Components/ReceiverDetails';
 import DonorList from './Components/Donorlist';
 import ReceiverPage from './Components/ReceiverPage';
+import { DonorProvider } from './Context/donorcontext';
+import TermsAndConditions from './Components/terms';
+
 const Stack=createNativeStackNavigator();
 
 export default function App() {
   return (
-   <NavigationContainer >
+    <DonorProvider>
+      <NavigationContainer >
     <Stack.Navigator initialRouteName='gettingstarted'>
       <Stack.Screen name="gettingstarted" component={GettingStarted} options={{headerShown:false}}/>
       <Stack.Screen name="signup" component={SignUp}/>
@@ -26,8 +30,12 @@ export default function App() {
       <Stack.Screen name="receiverdet" component={ReceiverDetails}/>
       <Stack.Screen name="donorlist" component={DonorList}/>
       <Stack.Screen name="receiver" component={ReceiverPage}/>
+      <Stack.Screen name="t&c" component={TermsAndConditions}/>
+      
     </Stack.Navigator>
    </NavigationContainer>
+    </DonorProvider>
+   
   );
 }
 

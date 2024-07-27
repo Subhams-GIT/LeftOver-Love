@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { Donor } from "../Backend/Donors";
 const { width } = Dimensions.get('window');
 
 export default function ReceiverDetails({ navigation }) {
@@ -56,13 +56,14 @@ export default function ReceiverDetails({ navigation }) {
     } else if (userdata.email.indexOf("@") < 0) {
       return Alert.alert("Please provide a valid email address.");
     }
-
+    
     try {
-      await AsyncStorage.setItem("usercreds", JSON.stringify(userdata));
-      setModalVisible(true);
-    } catch (error) {
-      console.error("Error saving data", error);
-      Alert.alert("Failed to save data.");
+        await AsyncStorage.setItem("receivercreds", JSON.stringify(userdata));
+        setModalVisible(true);
+      }
+     catch (error) {
+      console.error('Error submitting form:', error);
+      Alert.alert('Error', 'Failed to submit form');
     }
   }
 

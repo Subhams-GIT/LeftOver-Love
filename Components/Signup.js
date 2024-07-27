@@ -13,23 +13,24 @@ const SignUp = () => {
   const navigation = useNavigation();
 
   const handleSignUp = async () => {
-    if (!mobileNumber || !password || !confirmPassword) {
-      Alert.alert('All fields are required!');
-      return;
-    }
+    // if (!mobileNumber || !password || !confirmPassword) {
+    //   Alert.alert('All fields are required!');
+    //   return;
+    // }
 
-    if (password !== confirmPassword) {
-      Alert.alert('Passwords do not match!');
-      return;
-    }
+    // if (password !== confirmPassword) {
+    //   Alert.alert('Passwords do not match!');
+    //   return;
+    // }
 
-    try {
-      await AsyncStorage.setItem('userCredentials', JSON.stringify({ mobileNumber, password }));
-      navigation.navigate('login');
-    } catch (error) {
-      console.error('Error saving data', error);
-      Alert.alert('Failed to save data');
-    }
+    // try {
+    //   await AsyncStorage.setItem('userCredentials', JSON.stringify({ mobileNumber, password }));
+    //   navigation.navigate('login');
+    // } catch (error) {
+    //   console.error('Error saving data', error);
+    //   Alert.alert('Failed to save data');
+    // }
+    navigation.navigate('login');
   };
 
   const handleLoginPressIn = () => {

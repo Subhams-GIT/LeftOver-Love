@@ -1,68 +1,50 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView ,Alert} from 'react-native';
-import { Picker } from '@react-native-picker/picker'; 
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { useDonor } from '../Context/donorcontext';
 
-const DonorList = () => {
-  const navigation = useNavigation(); 
-
+const DonorList = ({ navigation }) => {
+  const { points, numberOfDonations, incrementPoints, incrementDonations } = useDonor();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [foodType, setFoodType] = useState('Veg');
   const [quantity, setQuantity] = useState('');
-  const [photo,setPhoto]=useState(null);
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      const { uri, type } = result.assets[0];
-      const fileType = type || (uri.endsWith('.png') ? 'image/png' : 'image/jpeg');
-      setPhoto({ uri, type: fileType, name: `photo.${fileType.split('/')[1]}` });
-    }
-  };
 
   const handleSubmit = async () => {
-    console.log(title);
-    console.log(description);
-    console.log(quantity);
-    console.log(foodType);
-     if (!title || !description || !quantity) {
+    if (!title || !description || !quantity) {
       Alert.alert('Please fill all the fields');
       return;
     }
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('typeoffood', foodType);
-    formData.append('quantity', quantity);
-    if (photo) {
-      formData.append('photo', {
-        uri: photo,
-        type: 'image/png', // Adjust the type based on the file
-        name: 'photo.png', // Name of the file
-      });
-    }
 
-      await axios.post('http://192.168.29.12:3000/submit-form', formData, {
+    const data = {
+      title,
+      description,
+      typeoffood: foodType,
+      quantity,
+    };
+
+    try {
+      const response = await fetch('http://192.168.29.12:3000/submit-form', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify(data),
       });
-      Alert.alert("Form submitted!");
-      navigation.navigate("DonorPage");
+      
+      if (response.ok) {
+        incrementPoints(100);
+        incrementDonations();
+        Alert.alert("Form submitted!");
+        navigation.navigate("DonorPage");
+      } else {
+        const errorText = await response.text();
+        Alert.alert('Failed to submit form', errorText);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to submit form');
+    }
   };
-
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -102,11 +84,6 @@ const DonorList = () => {
         keyboardType="numeric"
       />
 
-      <Text style={styles.label}>Photos</Text>
-      <TouchableOpacity style={styles.photoButton} onPress={pickImage}>
-        <Text style={styles.photoButtonText}>+ Add more</Text>
-      </TouchableOpacity>
-
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
@@ -134,15 +111,6 @@ const styles = StyleSheet.create({
     height: 50,
     width: '100%',
     marginBottom: 20,
-  },
-  photoButton: {
-    backgroundColor: '#eee',
-    padding: 10,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  photoButtonText: {
-    color: '#007bff',
   },
   submitButton: {
     backgroundColor: '#007bff',

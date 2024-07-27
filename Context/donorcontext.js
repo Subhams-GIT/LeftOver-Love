@@ -1,30 +1,26 @@
-// FormContext.js
-
 import React, { createContext, useState, useContext } from 'react';
 
-// Create a context for form data
-const FormContext = createContext();
+const DonorContext = createContext();
 
-// Create a provider component
-export const FormProvider = ({ children }) => {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    typeoffood: '',
-    quantity: '',
-    photo: null
-  });
+export const DonorProvider = ({ children }) => {
+  const [points, setPoints] = useState(0);
+  const [numberOfDonations, setNumberOfDonations] = useState(0);
 
-  const updateFormData = (newData) => {
-    setFormData((prevData) => ({ ...prevData, ...newData }));
+  const incrementPoints = (value) => {
+    setPoints(points + value);
+  };
+
+  const incrementDonations = () => {
+    setNumberOfDonations(numberOfDonations + 1);
   };
 
   return (
-    <FormContext.Provider value={{ formData, updateFormData }}>
+    <DonorContext.Provider value={{ points, numberOfDonations, incrementPoints, incrementDonations }}>
       {children}
-    </FormContext.Provider>
+    </DonorContext.Provider>
   );
 };
 
-// Custom hook to use form data context
-export const useFormContext = () => useContext(FormContext);
+export const useDonor = () => {
+  return useContext(DonorContext);
+};

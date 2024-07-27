@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Pressable,
   View,
@@ -9,24 +9,39 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useDonor } from "../Context/donorcontext";
 
 export default function DonorPage({ navigation }) {
   const [donor, setDonor] = useState({});
+  const [donationDetails, setDonationDetails] = useState({});
+  const { points, numberOfDonations, incrementPoints, incrementDonations } = useDonor();
 
-  useEffect(() => {
-    const fetchUserCredentials = async () => {
-      try {
-        const details = await AsyncStorage.getItem("usercreds");
-        const parsedDetails = JSON.parse(details);
-        setDonor(parsedDetails);
-      } catch (error) {
-        console.error("Error fetching user credentials:", error);
-      }
-    };
+  const fetchUserCredentials = async () => {
+    try {
+      const details = await AsyncStorage.getItem("usercreds");
+      const parsedDetails = JSON.parse(details);
+      setDonor(parsedDetails);
+    } catch (error) {
+      console.error("Error fetching user credentials:", error);
+    }
+  };
 
-    fetchUserCredentials();
-  }, []);
+  const fetchFoodDetails = async () => {
+    try {
+      const response = await fetch('http://192.168.29.12:3000/form-data');
+      const data = await response.json();
+      setDonationDetails(data);
+    } catch (error) {
+      console.error("Error fetching food details:", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchFoodDetails();
+    }, [])
+  );
 
   const data = [
     { id: 1, title: "Item 1" },
@@ -41,10 +56,6 @@ export default function DonorPage({ navigation }) {
     </View>
   );
 
-
-  const getItemCount = (data) => data.length;
-  const getItem = (data, index) => data[index];
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -52,7 +63,7 @@ export default function DonorPage({ navigation }) {
         <Text style={styles.title}>You Are A Donor</Text>
       </View>
       <View style={styles.statsContainer}>
-        {["No of Donations", "FeedBack", "Points Earned"].map((text, index) => (
+        {[`No of Donations ${numberOfDonations}`, `Points Earned: ${points}`].map((text, index) => (
           <View key={index} style={styles.statsItem}>
             <Text>{text}</Text>
           </View>
@@ -82,10 +93,9 @@ export default function DonorPage({ navigation }) {
         <View style={styles.donationItem}>
           <Image source={require("../assets/chef.png")} style={styles.donationImage} />
           <View>
-            <Text>ID</Text>
-            <Text>Item</Text>
-            <Text>Quantity</Text>
-            <Text>Status</Text>
+            <Text>Type of food: {donationDetails.typeoffood}</Text>
+            <Text>Item: {donationDetails.title}</Text>
+            <Text>Quantity: {donationDetails.quantity}</Text>
           </View>
         </View>
       </View>
@@ -204,33 +214,6 @@ const styles = StyleSheet.create({
   },
   ngoTitle: {
     fontSize: 15,
-  },
-  faqContainer: {
-    marginTop: 20,
-    borderWidth: 1,
-    padding: 10,
-  },
-  faqTitle: {
-    borderBottomWidth: 1,
-    width: "35%",
-    marginBottom: 10,
-  },
-  items: {
-    marginBottom: 10,
-  },
-  question: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    backgroundColor: "#c3cfe2",
-    padding: 10,
-    borderRadius: 10,
-  },
-  answer: {
-    marginTop: 5,
-    fontSize: 16,
-    color: "#666",
-    paddingHorizontal: 10,
   },
   item: {
     flex: 1,

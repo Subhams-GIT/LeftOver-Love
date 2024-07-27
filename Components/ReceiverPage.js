@@ -12,14 +12,17 @@ import {
 
 
 export default function ReceiverPage({ navigation }) {
-  const [donor, setDonor] = useState({});
-
+  const [receiver, setreceiver] = useState({});
+  const [donor,setdonor]=useState({});
   useEffect(() => {
     const fetchUserCredentials = async () => {
       try {
-        const details = await AsyncStorage.getItem("usercreds");
+        const details = await AsyncStorage.getItem("receivercreds");
         const parsedDetails = JSON.parse(details);
-        setDonor(parsedDetails);
+        const donors=await AsyncStorage.getItem("usercreds")
+        setdonor(donors)
+        console.log(donors);
+        setreceiver(parsedDetails);
       } catch (error) {
         console.error("Error fetching user credentials:", error);
       }
@@ -28,12 +31,7 @@ export default function ReceiverPage({ navigation }) {
     fetchUserCredentials();
   }, []);
 
-  const data = [
-    { id: 1, title: "Item 1" },
-    { id: 2, title: "Item 2" },
-    { id: 3, title: "Item 3" },
-    { id: 4, title: "Item 4" },
-  ];
+  const data = [donor];
 
   const renderItem = ({ item }) => (
     <View style={styles.item}>
@@ -48,11 +46,11 @@ export default function ReceiverPage({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.greeting}>Hi {donor.cname}</Text>
+        <Text style={styles.greeting}>Hi {receiver.cname}</Text>
         <Text style={styles.title}>You Are A Receiver</Text>
       </View>
       <View style={styles.statsContainer}>
-        {["No of Donations", "FeedBack", "Points Earned"].map((text, index) => (
+        {[`No of food request met :`, `Points Earned :`].map((text, index) => (
           <View key={index} style={styles.statsItem}>
             <Text>{text}</Text>
           </View>
@@ -66,7 +64,7 @@ export default function ReceiverPage({ navigation }) {
           <Text style={styles.createPostText}>Do you require Food?</Text>
           <Pressable
             style={styles.createPostButton}
-            onPress={() => navigation.navigate("donorlist")}
+            onPress={() => navigation.navigate("receiverlist")}
           >
             <Text style={styles.createPostButtonText}>Create Post for Food</Text>
           </Pressable>
@@ -88,6 +86,17 @@ export default function ReceiverPage({ navigation }) {
             <Text>Status</Text>
           </View>
         </View>
+        <View style={styles.ngoContainer}>
+        <View style={styles.ngoHeader}>
+          <Text style={styles.ngoTitle}>Donors</Text>
+        </View>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          numColumns={2}
+          
+        />
+      </View>
       </View>
     </SafeAreaView>
   );
