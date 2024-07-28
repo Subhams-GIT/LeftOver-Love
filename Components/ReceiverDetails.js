@@ -122,9 +122,7 @@ export default function ReceiverDetails({ navigation }) {
           value={userdata.state}
           onChangeText={(value) => handleChange("state", value)}
         />
-        <TouchableOpacity style={styles.pinLocationButton} onPress={() => console.log('Pin Location pressed')}>
-          <Text style={styles.pinLocationText}>Pin Location by map</Text>
-        </TouchableOpacity>
+        
         <TouchableOpacity style={styles.submitButton} onPress={submit}>
           <Text style={styles.submitButtonText}>Submit</Text>
         </TouchableOpacity>
@@ -209,7 +207,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalButton: {
-    backgroundColor: '#00c6ab',
+    backgroundColor: 'white',
     borderRadius: 5,
     padding: 10,
     alignItems: 'center',

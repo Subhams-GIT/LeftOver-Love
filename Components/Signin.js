@@ -12,29 +12,29 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
 
-    // if (!mobileNumber || !password) {
-    //   Alert.alert('Both fields are required!');
-    //   return;
-    // }
+    if (!mobileNumber || !password) {
+      Alert.alert('Both fields are required!');
+      return;
+    }
 
-    // try {
+    try {
 
-    //   const storedData = await AsyncStorage.getItem('userCredentials');
-    //   if (storedData) {
-    //     const { mobileNumber: storedMobileNumber, password: storedPassword } = JSON.parse(storedData);
+      const storedData = await AsyncStorage.getItem('userCredentials');
+      if (storedData) {
+        const { mobileNumber: storedMobileNumber, password: storedPassword } = JSON.parse(storedData);
 
-    //     if (mobileNumber === storedMobileNumber && password === storedPassword) {
-    //       navigation.navigate('Role');
-    //     } else {
-    //       Alert.alert('Invalid credentials!');
-    //     }
-    //   } else {
-    //     Alert.alert('No user data found!');
-    //   }
-    // } catch (error) {
-    //   console.error('Error retrieving data', error);
-    //   Alert.alert('Failed to retrieve data');
-    // }
+        if (mobileNumber === storedMobileNumber && password === storedPassword) {
+          navigation.navigate('Role');
+        } else {
+          Alert.alert('Invalid credentials!');
+        }
+      } else {
+        Alert.alert('No user data found!');
+      }
+    } catch (error) {
+      console.error('Error retrieving data', error);
+      Alert.alert('Failed to retrieve data');
+    }
     navigation.navigate('Role');
   };
 

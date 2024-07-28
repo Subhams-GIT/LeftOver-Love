@@ -9,39 +9,38 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-
+import { useDonor } from "../Context/donorcontext";
 
 export default function ReceiverPage({ navigation }) {
-  const [receiver, setreceiver] = useState({});
-  const [donor,setdonor]=useState({});
+  const { points, numberOfDonations } = useDonor();
+  const [receiver, setReceiver] = useState({});
+  const [lastDonation, setLastDonation] = useState({});
+
   useEffect(() => {
     const fetchUserCredentials = async () => {
       try {
         const details = await AsyncStorage.getItem("receivercreds");
         const parsedDetails = JSON.parse(details);
-        const donors=await AsyncStorage.getItem("usercreds")
-        setdonor(donors)
-        console.log(donors);
-        setreceiver(parsedDetails);
+        setReceiver(parsedDetails);
       } catch (error) {
         console.error("Error fetching user credentials:", error);
       }
     };
 
+    const fetchLastDonation = async () => {
+      try {
+        const response = await fetch('http://192.168.29.12:3000/form-data');
+        console.log(response);
+        const data = await response.json();
+        setLastDonation(data);
+      } catch (error) {
+        console.error("Error fetching last donation:", error);
+      }
+    };
+
     fetchUserCredentials();
+    fetchLastDonation();
   }, []);
-
-  const data = [donor];
-
-  const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Text>{item.title}</Text>
-    </View>
-  );
-
-
-  const getItemCount = (data) => data.length;
-  const getItem = (data, index) => data[index];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,7 +49,7 @@ export default function ReceiverPage({ navigation }) {
         <Text style={styles.title}>You Are A Receiver</Text>
       </View>
       <View style={styles.statsContainer}>
-        {[`No of food request met :`, `Points Earned :`].map((text, index) => (
+        {[`No of food request met: ${numberOfDonations}`, `Points Earned: ${points}`].map((text, index) => (
           <View key={index} style={styles.statsItem}>
             <Text>{text}</Text>
           </View>
@@ -60,15 +59,6 @@ export default function ReceiverPage({ navigation }) {
         <Pressable style={styles.myPostButton}>
           <Text style={styles.myPostText}>My Post</Text>
         </Pressable>
-        <View style={styles.createPostContainer}>
-          <Text style={styles.createPostText}>Do you require Food?</Text>
-          <Pressable
-            style={styles.createPostButton}
-            onPress={() => navigation.navigate("receiverlist")}
-          >
-            <Text style={styles.createPostButtonText}>Create Post for Food</Text>
-          </Pressable>
-        </View>
       </View>
       <View style={styles.donationHistoryContainer}>
         <View style={styles.donationHistoryHeader}>
@@ -77,26 +67,23 @@ export default function ReceiverPage({ navigation }) {
             <Text style={styles.viewAllText}>View All</Text>
           </Pressable>
         </View>
-        <View style={styles.donationItem}>
-          <Image source={require("../assets/chef.png")} style={styles.donationImage} />
-          <View>
-            <Text>ID</Text>
-            <Text>Item</Text>
-            <Text>Quantity</Text>
-            <Text>Status</Text>
+        {lastDonation ? (
+          <View style={styles.donationItem}>
+            <Image source={require("../assets/chef.png")} style={styles.donationImage} />
+            <View>
+              <Text>Type of food: {lastDonation.typeoffood}</Text>
+              <Text>Item: {lastDonation.title}</Text>
+              <Text>Quantity: {lastDonation.quantity}</Text>
+            </View>
           </View>
-        </View>
-        <View style={styles.ngoContainer}>
+        ) : (
+          <Text>No donations found</Text>
+        )}
+      </View>
+      <View style={styles.ngoContainer}>
         <View style={styles.ngoHeader}>
           <Text style={styles.ngoTitle}>Donors</Text>
         </View>
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          numColumns={2}
-          
-        />
-      </View>
       </View>
     </SafeAreaView>
   );
@@ -141,30 +128,6 @@ const styles = StyleSheet.create({
   myPostText: {
     textAlign: "center",
   },
-  createPostContainer: {
-    height: 120,
-    width: "95%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#c3cfe2",
-    borderRadius: 10,
-    padding: 20,
-  },
-  createPostText: {
-    textAlign: "left",
-  },
-  createPostButton: {
-    backgroundColor: "#396afc",
-    height: 50,
-    width: 200,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  createPostButtonText: {
-    color: "white",
-  },
   donationHistoryContainer: {
     marginTop: 20,
   },
@@ -199,33 +162,6 @@ const styles = StyleSheet.create({
   },
   ngoTitle: {
     fontSize: 15,
-  },
-  faqContainer: {
-    marginTop: 20,
-    borderWidth: 1,
-    padding: 10,
-  },
-  faqTitle: {
-    borderBottomWidth: 1,
-    width: "35%",
-    marginBottom: 10,
-  },
-  items: {
-    marginBottom: 10,
-  },
-  question: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    backgroundColor: "#c3cfe2",
-    padding: 10,
-    borderRadius: 10,
-  },
-  answer: {
-    marginTop: 5,
-    fontSize: 16,
-    color: "#666",
-    paddingHorizontal: 10,
   },
   item: {
     flex: 1,

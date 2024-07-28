@@ -36,38 +36,38 @@ export default function DonorDetails({ navigation }) {
   };
 
   async function submit() {
-    // const {bname,
-    //   cname,
-    //   mno,
-    //   email,
-    //   address,
-    //   pincode,
-    //   city,
-    //   state,}=userdata;
-    // if (!(bname && mno && email&&address&& pincode&&city&&state )) {
-    //   return Alert.alert("Please provide all information");
-    // }
+    const {bname,
+      cname,
+      mno,
+      email,
+      address,
+      pincode,
+      city,
+      state,}=userdata;
+    if (!(bname && mno && email&&address&& pincode&&city&&state )) {
+      return Alert.alert("Please provide all information");
+    }
 
-    // const cleanedPhoneNumber = String(userdata.mno).trim();
-    // const cleanedPincode = String(userdata.pincode).trim();
+    const cleanedPhoneNumber = String(userdata.mno).trim();
+    const cleanedPincode = String(userdata.pincode).trim();
 
-    // if (cleanedPhoneNumber.length !== 10 || isNaN(cleanedPhoneNumber)) {
-    //   return Alert.alert("Please provide a correct phone number");
-    // }
+    if (cleanedPhoneNumber.length !== 10 || isNaN(cleanedPhoneNumber)) {
+      return Alert.alert("Please provide a correct phone number");
+    }
 
-    // if (cleanedPincode.length !== 6 || isNaN(cleanedPincode)) {
-    //   return Alert.alert("Please provide a correct pincode");
-    // } else if (userdata.email.indexOf("@") < 0) {
-    //   return Alert.alert("Please provide a correct email");
-    // }
+    if (cleanedPincode.length !== 6 || isNaN(cleanedPincode)) {
+      return Alert.alert("Please provide a correct pincode");
+    } else if (userdata.email.indexOf("@") < 0) {
+      return Alert.alert("Please provide a correct email");
+    }
 
-    // try {
-    //   await AsyncStorage.setItem("usercreds", JSON.stringify(userdata));
-    //   setModalVisible(true);
-    // } catch (error) {
-    //   console.error("Error saving data", error);
-    //   Alert.alert("Failed to save data");
-    // }
+    try {
+      await AsyncStorage.setItem("usercreds", JSON.stringify(userdata));
+      setModalVisible(true);
+    } catch (error) {
+      console.error("Error saving data", error);
+      Alert.alert("Failed to save data");
+    }
     navigation.navigate("DonorPage")
   }
 
@@ -132,10 +132,8 @@ export default function DonorDetails({ navigation }) {
             value={userdata.state}
             onChangeText={(value) => handleChange("state", value)}
           />
-          <Text style={styles.orText}>or</Text>
-          <Pressable>
-            <Text style={styles.mapText}>Pin location By map</Text>
-          </Pressable>
+        
+    
           <Pressable style={styles.submitButton} onPress={submit}>
             <Text style={styles.submitButtonText}>Submit</Text>
           </Pressable>

@@ -59,7 +59,7 @@ mongoose.connect('mongodb+srv://admin:1wBbD6m8brGWP1jM@cluster0.jhhmwud.mongodb.
 
 app.get('/form-data', async (req, res) => {
   try {
-    const formData = await Form.findOne().sort({ createdAt: -1 }).exec();
+    const formData = await Form.find();
     res.status(200).json(formData);
   } catch (error) {
     console.error(error);

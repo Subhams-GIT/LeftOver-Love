@@ -8,11 +8,56 @@ import {
   FlatList,
   StyleSheet,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useDonor } from "../Context/donorcontext";
+import Profile from "./profile";
+import GettingStarted from "./gettingStarted";
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import vector icons
+import FAQ from "./faq";
+const Tab = createBottomTabNavigator();
 
 export default function DonorPage({ navigation }) {
+  return (
+    <Tab.Navigator
+      initialRouteName="dashboard"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          if (route.name === 'dashboard') {
+            iconName = 'dashboard';
+          } else if (route.name === 'profile') {
+            iconName = 'person';
+          } else if (route.name === 'logout') {
+            iconName = 'logout';
+          }
+
+          // Return the icon component
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+      })}
+    >
+      <Tab.Screen name="dashboard" component={Dashboard} />
+      <Tab.Screen name="profile" component={Profile} />
+      <Tab.Screen name="logout" component={LogOutScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="faq" component={FAQ}/>
+    </Tab.Navigator>
+  );
+}
+
+function LogOutScreen({ navigation }) {
+  React.useEffect(() => {
+    navigation.navigate('gettingstarted');
+  }, [navigation]);
+
+  return null; 
+}
+
+function Dashboard(){
+  const navigation = useNavigation();
   const [donor, setDonor] = useState({});
   const [donationDetails, setDonationDetails] = useState({});
   const { points, numberOfDonations, incrementPoints, incrementDonations } = useDonor();
@@ -57,63 +102,65 @@ export default function DonorPage({ navigation }) {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.greeting}>Hi {donor.cname}</Text>
-        <Text style={styles.title}>You Are A Donor</Text>
-      </View>
-      <View style={styles.statsContainer}>
-        {[`No of Donations ${numberOfDonations}`, `Points Earned: ${points}`].map((text, index) => (
-          <View key={index} style={styles.statsItem}>
-            <Text>{text}</Text>
-          </View>
-        ))}
-      </View>
-      <View style={styles.postContainer}>
-        <Pressable style={styles.myPostButton}>
-          <Text style={styles.myPostText}>My Post</Text>
-        </Pressable>
-        <View style={styles.createPostContainer}>
-          <Text style={styles.createPostText}>Do you have some food to Donate?</Text>
-          <Pressable
-            style={styles.createPostButton}
-            onPress={() => navigation.navigate("donorlist")}
-          >
-            <Text style={styles.createPostButtonText}>Create Donation Post</Text>
-          </Pressable>
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.greeting}>Hi {donor.cname}</Text>
+          <Text style={styles.title}>You Are A Donor</Text>
         </View>
-      </View>
-      <View style={styles.donationHistoryContainer}>
-        <View style={styles.donationHistoryHeader}>
-          <Text style={styles.donationHistoryTitle}>Donation History</Text>
-          <Pressable>
-            <Text style={styles.viewAllText}>View All</Text>
-          </Pressable>
+        <View style={styles.statsContainer}>
+          {[`No of Donations: ${numberOfDonations}`, `Points Earned: ${points}`].map((text, index) => (
+            <View key={index} style={styles.statsItem}>
+              <Text>{text}</Text>
+            </View>
+          ))}
         </View>
-        <View style={styles.donationItem}>
-          <Image source={require("../assets/chef.png")} style={styles.donationImage} />
-          <View>
-            <Text>Type of food: {donationDetails.typeoffood}</Text>
-            <Text>Item: {donationDetails.title}</Text>
-            <Text>Quantity: {donationDetails.quantity}</Text>
+        <View style={styles.postContainer}>
+          <Pressable style={styles.myPostButton}>
+            <Text style={styles.myPostText}>My Post</Text>
+          </Pressable>
+          <View style={styles.createPostContainer}>
+            <Text style={styles.createPostText}>Do you have some food to Donate?</Text>
+            <Pressable
+              style={styles.createPostButton}
+              onPress={() => navigation.navigate("donorlist")}
+            >
+              <Text style={styles.createPostButtonText}>Create Donation Post</Text>
+            </Pressable>
           </View>
         </View>
-      </View>
-      <View style={styles.ngoContainer}>
-        <View style={styles.ngoHeader}>
-          <Text style={styles.ngoTitle}>NGOS NEAR YOU</Text>
-          <Pressable>
-            <Text style={styles.viewAllText}>View All</Text>
-          </Pressable>
+        <View style={styles.donationHistoryContainer}>
+          <View style={styles.donationHistoryHeader}>
+            <Text style={styles.donationHistoryTitle}>Donation History</Text>
+            <Pressable>
+              <Text style={styles.viewAllText}>View All</Text>
+            </Pressable>
+          </View>
+          <View style={styles.donationItem}>
+            <Image source={require("../assets/chef.png")} style={styles.donationImage} />
+            <View>
+              <Text>Type of food: {donationDetails.typeoffood}</Text>
+              <Text>Item: {donationDetails.title}</Text>
+              <Text>Quantity: {donationDetails.quantity}</Text>
+            </View>
+          </View>
         </View>
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          numColumns={2}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      </View>
-    </SafeAreaView>
+        <View style={styles.ngoContainer}>
+          <View style={styles.ngoHeader}>
+            <Text style={styles.ngoTitle}>NGOS NEAR YOU</Text>
+            <Pressable>
+              <Text style={styles.viewAllText}>View All</Text>
+            </Pressable>
+          </View>
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            numColumns={2}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 
