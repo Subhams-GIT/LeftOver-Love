@@ -29,7 +29,7 @@ export default function ReceiverPage({ navigation }) {
 
     const fetchLastDonation = async () => {
       try {
-        const response = await fetch('http://192.168.29.12:3000/form-data');
+        const response = await fetch('http://:3000/form-data');
         console.log(response);
         const data = await response.json();
         setLastDonation(data);

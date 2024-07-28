@@ -24,7 +24,7 @@ const DonorList = ({ navigation }) => {
     };
 
     try {
-      const response = await fetch('http://192.168.29.12:3000/submit-form', {
+      const response = await fetch('http://:3000/submit-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

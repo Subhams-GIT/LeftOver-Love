@@ -34,7 +34,8 @@ export default function DonorPage({ navigation }) {
           } else if (route.name === 'logout') {
             iconName = 'logout';
           }
-
+          else if(route.name === 'faq')
+            iconName='Question Mark'
           // Return the icon component
           return <Icon name={iconName} size={size} color={color} />;
         },
@@ -74,7 +75,7 @@ function Dashboard(){
 
   const fetchFoodDetails = async () => {
     try {
-      const response = await fetch('http://192.168.29.12:3000/form-data');
+      const response = await fetch('http://:3000/form-data');
       const data = await response.json();
       setDonationDetails(data);
     } catch (error) {

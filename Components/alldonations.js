@@ -7,7 +7,7 @@ export default function AllDonationsPage() {
   useEffect(() => {
     const fetchAllDonations = async () => {
       try {
-        const response = await fetch('http://192.168.29.12:3000/form-data'); // Ensure this endpoint returns all donations
+        const response = await fetch('http://:3000/form-data'); // Ensure this endpoint returns all donations
         const data = await response.json();
         setDonations(data);
       } catch (error) {
